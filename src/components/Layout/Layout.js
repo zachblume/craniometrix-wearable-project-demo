@@ -19,27 +19,22 @@ import {
     UsersIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
-
-const teams = [
-    { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
-    { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
-    { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
-];
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 const GlobalLayout = ({ children }) => {
     // use router to mark the ojbect for the current path as current:true
-
     const router = useRouter();
     const navigation = [
         { name: "Recommendations", href: "/", icon: UsersIcon },
         { name: "Realtime Alerts", href: "/alerts", icon: HomeIcon },
         { name: "Wandering Protection", href: "/wandering", icon: FolderIcon },
         { name: "Activity Patterns", href: "/activity", icon: CalendarIcon },
-        { name: "Something", href: "/something", icon: DocumentDuplicateIcon },
-        { name: "For Providers", href: "/providers", icon: ChartPieIcon },
+        { name: "Provider Dashboard", href: "/providers", icon: ChartPieIcon },
     ].map((item) => ({ ...item, current: item.href === router.pathname }));
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const supabase = useSupabaseClient();
 
     return (
         <div className={inter.className}>
@@ -83,33 +78,10 @@ const GlobalLayout = ({ children }) => {
                                         ))}
                                     </ul>
                                 </li>
-                                <li>
-                                    <div className="text-xs font-semibold leading-6 text-orange-100">
-                                        Your teams
-                                    </div>
-                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
-                                        {teams.map((team) => (
-                                            <li key={team.name}>
-                                                <a
-                                                    href={team.href}
-                                                    className={classNames(
-                                                        team.current
-                                                            ? "bg-orange-700 text-white"
-                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
-                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
-                                                    )}
-                                                >
-                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-orange-400 bg-orange-500 text-[0.625rem] font-medium text-white">
-                                                        {team.initial}
-                                                    </span>
-                                                    <span className="truncate">{team.name}</span>
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </li>
+
                                 <li className="-mx-6 mt-auto">
                                     <a
+                                        onClick={() => supabase.auth.signOut()}
                                         href="#"
                                         className="flex items-center gap-x-4 px-6 py-3 font-semibold leading-6 text-white hover:bg-orange-700"
                                     >
@@ -234,36 +206,6 @@ const GlobalLayout = ({ children }) => {
                                                                         aria-hidden="true"
                                                                     />
                                                                     {item.name}
-                                                                </a>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </li>
-                                                <li>
-                                                    <div className="text-xs font-semibold leading-6 text-orange-100">
-                                                        Your teams
-                                                    </div>
-                                                    <ul
-                                                        role="list"
-                                                        className="-mx-2 mt-2 space-y-1"
-                                                    >
-                                                        {teams.map((team) => (
-                                                            <li key={team.name}>
-                                                                <a
-                                                                    href={team.href}
-                                                                    className={classNames(
-                                                                        team.current
-                                                                            ? "bg-orange-700 text-white"
-                                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
-                                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
-                                                                    )}
-                                                                >
-                                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-orange-400 bg-orange-500 text-[0.625rem] font-medium text-white">
-                                                                        {team.initial}
-                                                                    </span>
-                                                                    <span className="truncate">
-                                                                        {team.name}
-                                                                    </span>
                                                                 </a>
                                                             </li>
                                                         ))}

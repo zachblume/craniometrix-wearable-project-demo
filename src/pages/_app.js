@@ -17,12 +17,60 @@ if (realtime) {
     };
 }
 
+import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { SessionContextProvider, useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useState } from "react";
+
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useUser } from "@supabase/auth-helpers-react";
+import Main from "@/components/Layout/Main";
+import PageWrapper from "@/components/Layout/PageWrapper";
+import PageTitle from "@/components/Layout/PageTitle";
+
+const PleaseLoginWrapper = ({ children }) => {
+    const supabase = useSupabaseClient();
+    return !useUser() ? (
+        <PageWrapper>
+            {/* card */}
+            <div className="shadow mx-auto p-12 max-w-xl rounded-lg ring-1 ring-black ring-opacity-10">
+                <PageTitle title="Sign in" breadCrumbs={[]} />
+                <Main>
+                    <Auth
+                        redirectTo="http://localhost:3000/"
+                        appearance={{
+                            theme: {
+                                ...ThemeSupa,
+                                // change the color from green to orange of the supabase login button
+                                default: { colors: { brand: "#F6A037", brandAccent: "#FCA563" } },
+                            },
+                        }}
+                        supabaseClient={supabase}
+                        providers={[]}
+                        socialLayout="horizontal"
+                    />
+                </Main>{" "}
+            </div>
+        </PageWrapper>
+    ) : (
+        children
+    );
+};
+
 const App = ({ Component, pageProps }) => {
+    const [supabaseClient] = useState(() => createBrowserSupabaseClient());
     return (
         <SWRConfig value={swrOptions}>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
+            <SessionContextProvider
+                supabaseClient={supabaseClient}
+                initialSession={pageProps.initialSession}
+            >
+                <Layout>
+                    <PleaseLoginWrapper>
+                        <Component {...pageProps} />
+                    </PleaseLoginWrapper>
+                </Layout>
+            </SessionContextProvider>
         </SWRConfig>
     );
 };
