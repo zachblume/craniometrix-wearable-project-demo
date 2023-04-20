@@ -10,3 +10,11 @@
 .btn-secondary {
     @apply rounded-md bg-white px-3 py-2 font-medium text-gray-900 shadow ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
 }
+
+html {
+    @apply border-t-sky-400 border-t-8 lg:pt-4;
+}
+
+.desktop-sidebar {
+    @apply hidden lg:fixed lg:top-2 lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col shadow-md;
+}

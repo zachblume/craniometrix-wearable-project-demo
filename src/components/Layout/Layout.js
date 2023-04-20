@@ -42,7 +42,7 @@ const GlobalLayout = ({ children }) => {
                 <ToastContainer />
 
                 {/* Static sidebar for desktop */}
-                <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col shadow-md">
+                <div className="desktop-sidebar">
                     {/* Sidebar component */}
                     <div className="flex grow flex-col gap-y-14 overflow-y-auto bg-orange-600 px-6">
                         <div className="flex h-16 shrink-0 items-center">
