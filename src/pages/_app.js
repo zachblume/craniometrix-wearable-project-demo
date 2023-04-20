@@ -33,26 +33,24 @@ const PleaseLoginWrapper = ({ children }) => {
     return !useUser() ? (
         <PageWrapper>
             {/* card */}
-            <div className="shadow mx-auto p-12 max-w-xl rounded-lg ring-1 ring-black ring-opacity-10">
+            <div className="shadow-md mx-auto p-12 max-w-xl rounded-lg ring-1 ring-black ring-opacity-10">
                 <PageTitle title="Sign in" breadCrumbs={[]} />
-                <Main>
-                    <Auth
-                        redirectTo="http://localhost:3000/"
-                        appearance={{
-                            theme: {
-                                ...ThemeSupa,
-                                // change the color from green to orange of the supabase login button
-                                default: {
-                                    ...ThemeSupa.default,
-                                    colors: { brand: "#F6A037", brandAccent: "#FCA563" },
-                                },
+                <Auth
+                    redirectTo="http://localhost:3000/"
+                    appearance={{
+                        theme: {
+                            ...ThemeSupa,
+                            // change the color from green to orange of the supabase login button
+                            default: {
+                                ...ThemeSupa.default,
+                                colors: { brand: "#F6A037", brandAccent: "#FCA563" },
                             },
-                        }}
-                        supabaseClient={supabase}
-                        providers={[]}
-                        socialLayout="horizontal"
-                    />
-                </Main>{" "}
+                        },
+                    }}
+                    supabaseClient={supabase}
+                    providers={[]}
+                    socialLayout="horizontal"
+                />
             </div>
         </PageWrapper>
     ) : (
