@@ -1,5 +1,7 @@
 # Wearable Project - Sketch for Craniometrix
 
+![](/public/homepage.png)
+
 ## Introduction
 
 I’m excited to present this proposal for moving forward our launch of an Apple Watch integration designed to improve care delivery for Alzheimer's patients. Our aim is to pioneer continuous monitoring in order to provide predictive insights that lead to more timely interventions, improving the health and quality of life for patients suffering from Alzheimer's disease.
