@@ -142,10 +142,12 @@ const GlobalLayout = ({ children }) => {
                     <div className="flex-1 font-semibold leading-6 text-white">Dashboard</div>
                     <a href="#">
                         <span className="sr-only">Your profile</span>
-                        <img
+                        <Image
                             className="h-8 w-8 rounded-full bg-orange-700"
-                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                            alt=""
+                            src="/avatar.jpg"
+                            alt="avatar"
+                            height={100}
+                            width={100}
                         />
                     </a>
                 </div>
