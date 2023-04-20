@@ -42,7 +42,10 @@ const PleaseLoginWrapper = ({ children }) => {
                             theme: {
                                 ...ThemeSupa,
                                 // change the color from green to orange of the supabase login button
-                                default: { colors: { brand: "#F6A037", brandAccent: "#FCA563" } },
+                                default: {
+                                    ...ThemeSupa.default,
+                                    colors: { brand: "#F6A037", brandAccent: "#FCA563" },
+                                },
                             },
                         }}
                         supabaseClient={supabase}
