@@ -215,6 +215,6 @@ export default GlobalLayout;
 
 const Brand = () => (
     <div className="brand">
-        {/* <Image src="/logo.png" height="128" width="466" className="w-32" alt="logo" /> */}
+        <Image src="/logo.png" height="128" width="466" className="w-32" alt="logo" />
     </div>
 );
