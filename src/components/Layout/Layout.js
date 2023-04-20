@@ -32,11 +32,11 @@ const GlobalLayout = ({ children }) => {
     const router = useRouter();
     const navigation = [
         { name: "Recommendations", href: "/", icon: UsersIcon },
-        { name: "Realtime Alerts", href: "#", icon: HomeIcon },
-        { name: "Wandering Protection", href: "#", icon: FolderIcon },
-        { name: "Activity Patterns", href: "#", icon: CalendarIcon },
-        { name: "Documents", href: "#", icon: DocumentDuplicateIcon },
-        { name: "For Providers", href: "#", icon: ChartPieIcon },
+        { name: "Realtime Alerts", href: "/alerts", icon: HomeIcon },
+        { name: "Wandering Protection", href: "/wandering", icon: FolderIcon },
+        { name: "Activity Patterns", href: "/activity", icon: CalendarIcon },
+        { name: "Something", href: "/something", icon: DocumentDuplicateIcon },
+        { name: "For Providers", href: "/providers", icon: ChartPieIcon },
     ].map((item) => ({ ...item, current: item.href === router.pathname }));
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -113,13 +113,15 @@ const GlobalLayout = ({ children }) => {
                                         href="#"
                                         className="flex items-center gap-x-4 px-6 py-3 font-semibold leading-6 text-white hover:bg-orange-700"
                                     >
-                                        <img
+                                        <Image
                                             className="h-8 w-8 rounded-full bg-orange-700"
-                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                            alt=""
+                                            src="/avatar.jpg"
+                                            alt="avatar"
+                                            height={100}
+                                            width={100}
                                         />
                                         <span className="sr-only">Your profile</span>
-                                        <span aria-hidden="true">Tom Cook</span>
+                                        <span aria-hidden="true">Zach Blume</span>
                                     </a>
                                 </li>
                             </ul>
