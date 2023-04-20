@@ -1,1 +1,1 @@
-# craniometrix-wearable-project-demo
+# Wearable Project
