@@ -33,7 +33,7 @@ const PleaseLoginWrapper = ({ children }) => {
     return !useUser() ? (
         <PageWrapper>
             {/* card */}
-            <div className="shadow-md mx-auto p-12 max-w-xl rounded-lg ring-1 ring-black ring-opacity-10">
+            <div className="shadow-md mx-auto p-12 max-w-lg rounded-lg ring-1 ring-black ring-opacity-10">
                 <PageTitle title="Sign in" breadCrumbs={[]} />
                 <Auth
                     redirectTo="http://localhost:3000/"
