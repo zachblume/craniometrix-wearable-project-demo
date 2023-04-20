@@ -1,5 +1,4 @@
 import { useQuery, postgrest } from "@/lib/db";
-import Table from "@/components/Table";
 import PageTitle from "@/components/Layout/PageTitle";
 import Main from "@/components/Layout/Main";
 import PageWrapper from "@/components/Layout/PageWrapper";
