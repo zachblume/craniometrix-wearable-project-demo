@@ -15,9 +15,10 @@
 }
 
 .btn-primary {
-    @apply inline-flex items-center rounded-md bg-fuchsia-600 px-3 py-2 text-sm font-medium text-white shadow-sm hover:bg-fuchsia-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fuchsia-600;
+    @apply inline-flex items-center rounded-md bg-orange-600 px-3 py-2 font-medium text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600;
+    @apply shadow-lg;
 }
 
 .btn-secondary {
-    @apply rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
+    @apply rounded-md bg-white px-3 py-2 font-medium text-gray-900 shadow ring-1 ring-inset ring-gray-300 hover:bg-gray-50;
 }

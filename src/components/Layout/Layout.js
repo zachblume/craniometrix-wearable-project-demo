@@ -1,23 +1,29 @@
-import { Fragment } from "react";
 import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+
 import Image from "next/image";
 const classNames = (...classes) => classes.filter(Boolean).join(" ");
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 
-const user = {
-    name: "Zach Blume",
-    email: "zachblume@gmail.com",
-};
+import { Fragment, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import {
+    Bars3Icon,
+    CalendarIcon,
+    ChartPieIcon,
+    DocumentDuplicateIcon,
+    FolderIcon,
+    HomeIcon,
+    UsersIcon,
+    XMarkIcon,
+} from "@heroicons/react/24/outline";
 
-const userNavigation = [
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
+const teams = [
+    { id: 1, name: "Heroicons", href: "#", initial: "H", current: false },
+    { id: 2, name: "Tailwind Labs", href: "#", initial: "T", current: false },
+    { id: 3, name: "Workcation", href: "#", initial: "W", current: false },
 ];
 
 const GlobalLayout = ({ children }) => {
@@ -25,188 +31,253 @@ const GlobalLayout = ({ children }) => {
 
     const router = useRouter();
     const navigation = [
-        { name: "Dashboard", href: "/" },
-        { name: "Link", href: "/link" },
-        { name: "Link2", href: "/link2" },
+        { name: "Recommendations", href: "/", icon: UsersIcon },
+        { name: "Realtime Alerts", href: "#", icon: HomeIcon },
+        { name: "Wandering Protection", href: "#", icon: FolderIcon },
+        { name: "Activity Patterns", href: "#", icon: CalendarIcon },
+        { name: "Documents", href: "#", icon: DocumentDuplicateIcon },
+        { name: "For Providers", href: "#", icon: ChartPieIcon },
     ].map((item) => ({ ...item, current: item.href === router.pathname }));
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
         <div className={inter.className}>
             <>
                 <ToastContainer />
-                <div className="min-h-full">
-                    <Disclosure as="nav" className="border-b border-gray-200 bg-white">
-                        {({ open }) => (
-                            <>
-                                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                                    <div className="flex h-16 justify-between">
-                                        <div className="flex">
-                                            <div className="flex flex-shrink-0 items-center">
-                                                <Brand />
-                                            </div>
-                                            <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                                                {navigation.map((item) => (
-                                                    <a
-                                                        key={item.name}
-                                                        href={item.href}
+
+                {/* Static sidebar for desktop */}
+                <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col shadow-md">
+                    {/* Sidebar component */}
+                    <div className="flex grow flex-col gap-y-14 overflow-y-auto bg-orange-600 px-6">
+                        <div className="flex h-16 shrink-0 items-center">
+                            <Brand />
+                        </div>
+                        <nav className="flex flex-1 flex-col">
+                            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                                <li>
+                                    <ul role="list" className="-mx-2 space-y-1">
+                                        {navigation.map((item) => (
+                                            <li key={item.name}>
+                                                <a
+                                                    href={item.href}
+                                                    className={classNames(
+                                                        item.current
+                                                            ? "bg-orange-700 text-white"
+                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
+                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
+                                                    )}
+                                                >
+                                                    <item.icon
                                                         className={classNames(
                                                             item.current
-                                                                ? "border-fuchsia-500 text-gray-900"
-                                                                : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                                                            "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
+                                                                ? "text-white"
+                                                                : "text-orange-100 group-hover:text-white",
+                                                            "h-6 w-6 shrink-0"
                                                         )}
-                                                        aria-current={
-                                                            item.current ? "page" : undefined
-                                                        }
-                                                    >
-                                                        {item.name}
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                                            <button
-                                                type="button"
-                                                className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2"
-                                            >
-                                                <span className="sr-only">View notifications</span>
-                                                <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                            </button>
-
-                                            {/* Profile dropdown */}
-                                            <Menu as="div" className="relative ml-3">
-                                                <div>
-                                                    <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2">
-                                                        <span className="sr-only">
-                                                            Open user menu
-                                                        </span>
-
-                                                        <Image
-                                                            className="h-8 w-8 rounded-full"
-                                                            width="100"
-                                                            height="100"
-                                                            src="/avatar.png"
-                                                            alt="avatar"
-                                                        />
-                                                    </Menu.Button>
-                                                </div>
-                                                <Transition
-                                                    as={Fragment}
-                                                    enter="transition ease-out duration-200"
-                                                    enterFrom="transform opacity-0 scale-95"
-                                                    enterTo="transform opacity-100 scale-100"
-                                                    leave="transition ease-in duration-75"
-                                                    leaveFrom="transform opacity-100 scale-100"
-                                                    leaveTo="transform opacity-0 scale-95"
-                                                >
-                                                    <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                                        {userNavigation.map((item) => (
-                                                            <Menu.Item key={item.name}>
-                                                                {({ active }) => (
-                                                                    <a
-                                                                        href={item.href}
-                                                                        className={classNames(
-                                                                            active
-                                                                                ? "bg-gray-100"
-                                                                                : "",
-                                                                            "block px-4 py-2 text-sm text-gray-700"
-                                                                        )}
-                                                                    >
-                                                                        {item.name}
-                                                                    </a>
-                                                                )}
-                                                            </Menu.Item>
-                                                        ))}
-                                                    </Menu.Items>
-                                                </Transition>
-                                            </Menu>
-                                        </div>
-                                        <div className="-mr-2 flex items-center sm:hidden">
-                                            {/* Mobile menu button */}
-                                            <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2">
-                                                <span className="sr-only">Open main menu</span>
-                                                {open ? (
-                                                    <XMarkIcon
-                                                        className="block h-6 w-6"
                                                         aria-hidden="true"
                                                     />
-                                                ) : (
-                                                    <Bars3Icon
-                                                        className="block h-6 w-6"
-                                                        aria-hidden="true"
-                                                    />
-                                                )}
-                                            </Disclosure.Button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <Disclosure.Panel className="sm:hidden">
-                                    <div className="space-y-1 pb-3 pt-2">
-                                        {navigation.map((item) => (
-                                            <Disclosure.Button
-                                                key={item.name}
-                                                as="a"
-                                                href={item.href}
-                                                className={classNames(
-                                                    item.current
-                                                        ? "border-fuchsia-500 bg-fuchsia-50 text-fuchsia-700"
-                                                        : "border-transparent text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800",
-                                                    "block border-l-4 py-2 pl-3 pr-4 text-base font-medium"
-                                                )}
-                                                aria-current={item.current ? "page" : undefined}
-                                            >
-                                                {item.name}
-                                            </Disclosure.Button>
-                                        ))}
-                                    </div>
-                                    <div className="border-t border-gray-200 pb-3 pt-4">
-                                        <div className="flex items-center px-4">
-                                            <div className="flex-shrink-0">
-                                                <Image
-                                                    className="h-8 w-8 rounded-full"
-                                                    width="100"
-                                                    height="100"
-                                                    src="/avatar.png"
-                                                    alt="avatar"
-                                                />
-                                            </div>
-                                            <div className="ml-3">
-                                                <div className="text-base font-medium text-gray-800">
-                                                    {user.name}
-                                                </div>
-                                                <div className="text-sm font-medium text-gray-500">
-                                                    {user.email}
-                                                </div>
-                                            </div>
-                                            <button
-                                                type="button"
-                                                className="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2"
-                                            >
-                                                <span className="sr-only">View notifications</span>
-                                                <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                            </button>
-                                        </div>
-                                        <div className="mt-3 space-y-1">
-                                            {userNavigation.map((item) => (
-                                                <Disclosure.Button
-                                                    key={item.name}
-                                                    as="a"
-                                                    href={item.href}
-                                                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-                                                >
                                                     {item.name}
-                                                </Disclosure.Button>
-                                            ))}
-                                        </div>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                                <li>
+                                    <div className="text-xs font-semibold leading-6 text-orange-100">
+                                        Your teams
                                     </div>
-                                </Disclosure.Panel>
-                            </>
-                        )}
-                    </Disclosure>
-
-                    {children}
+                                    <ul role="list" className="-mx-2 mt-2 space-y-1">
+                                        {teams.map((team) => (
+                                            <li key={team.name}>
+                                                <a
+                                                    href={team.href}
+                                                    className={classNames(
+                                                        team.current
+                                                            ? "bg-orange-700 text-white"
+                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
+                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
+                                                    )}
+                                                >
+                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-orange-400 bg-orange-500 text-[0.625rem] font-medium text-white">
+                                                        {team.initial}
+                                                    </span>
+                                                    <span className="truncate">{team.name}</span>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                                <li className="-mx-6 mt-auto">
+                                    <a
+                                        href="#"
+                                        className="flex items-center gap-x-4 px-6 py-3 font-semibold leading-6 text-white hover:bg-orange-700"
+                                    >
+                                        <img
+                                            className="h-8 w-8 rounded-full bg-orange-700"
+                                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                                            alt=""
+                                        />
+                                        <span className="sr-only">Your profile</span>
+                                        <span aria-hidden="true">Tom Cook</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
+
+                {/* Mobile top bar */}
+                <div className="sticky top-0 z-40 flex items-center gap-x-6 bg-orange-600 px-4 py-4 shadow-sm sm:px-6 lg:hidden">
+                    <button
+                        type="button"
+                        className="-m-2.5 p-2.5 text-orange-100 lg:hidden"
+                        onClick={() => setSidebarOpen(true)}
+                    >
+                        <span className="sr-only">Open sidebar</span>
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                    <div className="flex-1 font-semibold leading-6 text-white">Dashboard</div>
+                    <a href="#">
+                        <span className="sr-only">Your profile</span>
+                        <img
+                            className="h-8 w-8 rounded-full bg-orange-700"
+                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt=""
+                        />
+                    </a>
+                </div>
+
+                {/* Mobile sidebar */}
+                <Transition.Root show={sidebarOpen} as={Fragment}>
+                    <Dialog as="div" className="relative z-50 lg:hidden" onClose={setSidebarOpen}>
+                        <Transition.Child
+                            as={Fragment}
+                            enter="transition-opacity ease-linear duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="transition-opacity ease-linear duration-300"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <div className="fixed inset-0 bg-gray-900/80" />
+                        </Transition.Child>
+
+                        <div className="fixed inset-0 flex">
+                            <Transition.Child
+                                as={Fragment}
+                                enter="transition ease-in-out duration-300 transform"
+                                enterFrom="-translate-x-full"
+                                enterTo="translate-x-0"
+                                leave="transition ease-in-out duration-300 transform"
+                                leaveFrom="translate-x-0"
+                                leaveTo="-translate-x-full"
+                            >
+                                <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
+                                    <Transition.Child
+                                        as={Fragment}
+                                        enter="ease-in-out duration-300"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="ease-in-out duration-300"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                                            <button
+                                                type="button"
+                                                className="-m-2.5 p-2.5"
+                                                onClick={() => setSidebarOpen(false)}
+                                            >
+                                                <span className="sr-only">Close sidebar</span>
+                                                <XMarkIcon
+                                                    className="h-6 w-6 text-white"
+                                                    aria-hidden="true"
+                                                />
+                                            </button>
+                                        </div>
+                                    </Transition.Child>
+                                    {/* Mobile Sidebar sub component */}
+                                    <div className="flex grow flex-col gap-y-14 overflow-y-auto bg-orange-600 px-6 pb-2">
+                                        <div className="flex h-16 shrink-0 items-center">
+                                            <Brand />
+                                        </div>
+                                        <nav className="flex flex-1 flex-col">
+                                            <ul
+                                                role="list"
+                                                className="flex flex-1 flex-col gap-y-7"
+                                            >
+                                                <li>
+                                                    <ul role="list" className="-mx-2 space-y-1">
+                                                        {navigation.map((item) => (
+                                                            <li key={item.name}>
+                                                                <a
+                                                                    href={item.href}
+                                                                    className={classNames(
+                                                                        item.current
+                                                                            ? "bg-orange-700 text-white"
+                                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
+                                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
+                                                                    )}
+                                                                >
+                                                                    <item.icon
+                                                                        className={classNames(
+                                                                            item.current
+                                                                                ? "text-white"
+                                                                                : "text-orange-100 group-hover:text-white",
+                                                                            "h-6 w-6 shrink-0"
+                                                                        )}
+                                                                        aria-hidden="true"
+                                                                    />
+                                                                    {item.name}
+                                                                </a>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <div className="text-xs font-semibold leading-6 text-orange-100">
+                                                        Your teams
+                                                    </div>
+                                                    <ul
+                                                        role="list"
+                                                        className="-mx-2 mt-2 space-y-1"
+                                                    >
+                                                        {teams.map((team) => (
+                                                            <li key={team.name}>
+                                                                <a
+                                                                    href={team.href}
+                                                                    className={classNames(
+                                                                        team.current
+                                                                            ? "bg-orange-700 text-white"
+                                                                            : "text-orange-100 hover:text-white hover:bg-orange-700",
+                                                                        "group flex gap-x-3 rounded-md p-2 leading-6 font-semibold"
+                                                                    )}
+                                                                >
+                                                                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-orange-400 bg-orange-500 text-[0.625rem] font-medium text-white">
+                                                                        {team.initial}
+                                                                    </span>
+                                                                    <span className="truncate">
+                                                                        {team.name}
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </Dialog>
+                </Transition.Root>
+
+                {/* Main */}
+                <main className="py-0 lg:pl-72">
+                    <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+                </main>
             </>
         </div>
     );
@@ -214,7 +285,10 @@ const GlobalLayout = ({ children }) => {
 export default GlobalLayout;
 
 const Brand = () => (
-    <div className="brand">
-        <Image src="/logo.png" height="128" width="466" className="w-32" alt="logo" />
-    </div>
+    <img
+        src="/logo.svg"
+        alt="Your Company"
+        // transform the svg to be white on trasnparent, and centered, using tailwind classes
+        className="h-20 mt-12 w-auto invert"
+    />
 );
