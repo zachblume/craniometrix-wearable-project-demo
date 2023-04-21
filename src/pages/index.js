@@ -180,7 +180,37 @@ const Recommendation = ({ recommendation, key: i }) => {
                 </div>
                 {open && (
                     <span className="relative w-full pt-3 block">
-                        <Chart data={{ a: 3 }} />
+                        <Chart
+                            data={{
+                                // 30 keys and values, where the keys are consecutive date strings like 01/01/2023
+                                // and the values are minutes of eating randomly fluctuation in a pattern:
+                                "01/01/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/02/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/03/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/04/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/05/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/06/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/07/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/08/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/09/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/10/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/11/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/12/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/13/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/14/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/15/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/16/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/17/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/18/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/19/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/20/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/21/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/22/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/23/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/24/2023": Math.floor(Math.random() * 10) + 1,
+                                "01/25/2023": Math.floor(Math.random() * 10) + 1,
+                            }}
+                        />
                     </span>
                 )}
             </li>
