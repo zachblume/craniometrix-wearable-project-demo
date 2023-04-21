@@ -128,7 +128,7 @@ const Recommendation = ({ recommendation, key: i }) => {
             );
         } else {
             // animate back to normal state
-            await animate("li", { scale: 1 }, { duration: 0.5 });
+            await animate("li", { scale: 1 }, { duration: 0 });
             await animate(
                 "li",
                 {
