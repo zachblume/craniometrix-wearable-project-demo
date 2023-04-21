@@ -1,10 +1,14 @@
+import { CheckIcon, HandThumbUpIcon, UserIcon } from "@heroicons/react/20/solid";
+import { useEffect, useId, useState, useid } from "react";
 import { useAnimate } from "framer-motion";
 import { useQuery, supabase } from "@/lib/useQuery";
+import { ClockIcon, HeartIcon, MapIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 import PageTitle from "@/components/Layout/PageTitle";
 import Main from "@/components/Layout/Main";
 import PageWrapper from "@/components/Layout/PageWrapper";
 import { toast } from "react-toastify";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import Chart from "@/components/Chart";
 
 const Home = () => {
     // const { data: recommendations, error, mutate } = useQuery(supabase.from("recommendations").select("*"));
@@ -51,16 +55,6 @@ const Home = () => {
         </PageWrapper>
     );
 };
-export default Home;
-
-// Make this a card
-const Card = ({}) => (
-    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">{children[0]}</div>
-        <div className="border-t border-gray-200 px-4 py-5 sm:px-6">{children[1]}</div>
-    </div>
-);
-import { ClockIcon, HeartIcon, MapIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 
 const recommendations = [
     {
@@ -98,7 +92,6 @@ const Recommendation = ({ recommendation, key: i }) => {
     const [open, setOpen] = useState(false);
 
     const showRecommendation = async () => {
-        setOpen(!open);
         if (!open) {
             await animate("li", { position: "absolute" }, { duration: 0 });
             await animate(
@@ -121,15 +114,12 @@ const Recommendation = ({ recommendation, key: i }) => {
                 {
                     duration: 0.5,
                     // fix the glitchy transition rendering
-                    type: "spring",
-                    stiffness: 100,
-                    damping: 12,
                 }
             );
         } else {
             // animate back to normal state
-            await animate("li", { scale: 1 }, { duration: 0 });
-            await animate(
+            animate("li", { scale: 1 }, { duration: 0.3 });
+            animate(
                 "li",
                 {
                     position: "relative",
@@ -149,14 +139,15 @@ const Recommendation = ({ recommendation, key: i }) => {
                 { duration: 0 }
             );
         }
+        setOpen(!open);
     };
 
     return (
         <div key={i} ref={scope}>
             <li
-                className="flow-root cursor-pointer"
-                // onMouseOver={() => (open ? null : animate("div", { scale: 1.03 }))}
-                // onMouseLeave={() => (open ? null : animate("div", { scale: 1 }))}
+                className="flow-root cursor-pointer -mt-1"
+                onMouseOver={() => (open ? null : animate("div", { scale: 1.03 }))}
+                onMouseLeave={() => (open ? null : animate("div", { scale: 1 }))}
                 onClick={(e) => {
                     e.preventDefault();
                     showRecommendation();
@@ -187,106 +178,10 @@ const Recommendation = ({ recommendation, key: i }) => {
                         <p className="mt-1 text-base text-gray-500">{recommendation.description}</p>
                     </div>
                 </div>
+                <span className="relative w-full h-full">{open && <Chart />}</span>
             </li>
         </div>
     );
 };
-import { CheckIcon, HandThumbUpIcon, UserIcon } from "@heroicons/react/20/solid";
-import { useEffect, useId, useState, useid } from "react";
 
-const timeline = [
-    {
-        id: 1,
-        content: "Applied to",
-        target: "Front End Developer",
-        hid: "#",
-        date: "Sep 20",
-        datetime: "2020-09-20",
-        icon: UserIcon,
-        iconBackground: "bg-gray-400",
-    },
-    {
-        id: 2,
-        content: "Advanced to phone screening by",
-        target: "Bethany Blake",
-        hid: "#",
-        date: "Sep 22",
-        datetime: "2020-09-22",
-        icon: HandThumbUpIcon,
-        iconBackground: "bg-blue-500",
-    },
-    {
-        id: 3,
-        content: "Completed phone screening with",
-        target: "Martha Gardner",
-        hid: "#",
-        date: "Sep 28",
-        datetime: "2020-09-28",
-        icon: CheckIcon,
-        iconBackground: "bg-green-500",
-    },
-    {
-        id: 4,
-        content: "Advanced to interview by",
-        target: "Bethany Blake",
-        hid: "#",
-        date: "Sep 30",
-        datetime: "2020-09-30",
-        icon: HandThumbUpIcon,
-        iconBackground: "bg-blue-500",
-    },
-    {
-        id: 5,
-        content: "Completed interview with",
-        target: "Katherine Snyder",
-        hid: "#",
-        date: "Oct 4",
-        datetime: "2020-10-04",
-        icon: CheckIcon,
-        iconBackground: "bg-green-500",
-    },
-];
-
-const Feed = () => (
-    <div className="flow-root">
-        <ul role="list" className="-mb-8">
-            {timeline.map((event, eventIdx) => (
-                <li key={event.id}>
-                    <div className="relative pb-8">
-                        {eventIdx !== timeline.length - 1 ? (
-                            <span
-                                className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
-                                aria-hidden="true"
-                            />
-                        ) : null}
-                        <div className="relative flex space-x-3">
-                            <div>
-                                <span
-                                    className={
-                                        "h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white " +
-                                        event.iconBackground
-                                    }
-                                >
-                                    <event.icon className="h-5 w-5 text-white" aria-hidden="true" />
-                                </span>
-                            </div>
-                            <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                                <div>
-                                    <p className="text-sm text-gray-500">
-                                        {event.content}{" "}
-                                        <a hid={event.hid} className="font-medium text-gray-900">
-                                            {event.target}
-                                        </a>
-                                    </p>
-                                </div>
-                                <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                                    <time dateTime={event.datetime}>{event.date}</time>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            ))}
-        </ul>
-    </div>
-);
+export default Home;
