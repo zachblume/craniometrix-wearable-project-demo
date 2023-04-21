@@ -1,5 +1,16 @@
 # Wearable Project - Sketch for Craniometrix
 
+## My priorities with this proposal:
+
+I wrote this proposal up with the aim of demonstrating a couple of focus areas:
+
+-   **System design for data and server architecture** of a system that can scale to 10,000 customers in the first three years
+-   **Clear writing on feature prioritization** in terms of delivering value to customers during the MVP stage
+-   A very basic demo UI that shows you a bit **more of my design sense**, how I think about UX, and shows more of my NextJS/React work
+-   Demonstrating my approach to a **development timeline**
+
+Here it is:
+
 ![](/public/homepage2.png)
 
 ## Introduction
