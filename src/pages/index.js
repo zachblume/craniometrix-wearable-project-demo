@@ -35,7 +35,7 @@ const Home = () => {
                 <div className="relative">
                     <ul
                         role="list"
-                        className=" mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2"
+                        className=" mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2 pb-32"
                     >
                         {recommendations.map((recommendation, i) => (
                             <Recommendation key={i} recommendation={recommendation} />
@@ -178,7 +178,11 @@ const Recommendation = ({ recommendation, key: i }) => {
                         <p className="mt-1 text-base text-gray-500">{recommendation.description}</p>
                     </div>
                 </div>
-                <span className="relative w-full h-full">{open && <Chart />}</span>
+                {open && (
+                    <span className="relative w-full pt-3 block">
+                        <Chart data={{ a: 3 }} />
+                    </span>
+                )}
             </li>
         </div>
     );

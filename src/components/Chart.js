@@ -11,41 +11,32 @@ import { Bar } from "react-chartjs-2";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-// chart.js...make the chart full width and height
-const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-
-    plugins: {
-        legend: {
-            display: false,
-            // position: "top",
+export default function Chart({ data: passedAlongData }) {
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+            },
         },
-        title: {
-            display: false,
-            // text: null,
-        },
-    },
-};
+    };
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+    const labels = Object.keys(passedAlongData);
 
-const data = {
-    labels,
-    datasets: [
-        {
-            label: "Dataset 1",
-            data: labels.map(() => 4),
-            backgroundColor: "rgba(255, 99, 132, 0.5)",
-        },
-        {
-            label: "Dataset 2",
-            data: labels.map(() => 4),
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
-        },
-    ],
-};
-
-export default function Chart() {
-    return <Bar options={options} data={data} width={"100%"} />;
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: "Metric",
+                // data: labels.map(() => 4),
+                data: Object.values(passedAlongData),
+                backgroundColor: "#F6A037",
+            },
+        ],
+    };
+    return <Bar options={options} data={data} width={"100%"} height={"250px"} />;
 }
