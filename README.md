@@ -1,15 +1,19 @@
 # Wearable Project - Sketch for Craniometrix
 
-## My priorities with this proposal:
+## My priorities in how I approached writing up this project proposal:
 
-I wrote this proposal up with the aim of demonstrating a couple of focus areas:
+I wrote this proposal up with the aim of demonstrating my style of thinking/working in a couple of focus areas:
 
 -   **System design for data and server architecture** of a system that can scale to 10,000 customers in the first three years
+    -   One key thing I did here was to **always retain raw data for the most recent 6-month period**, providing ample time to strategize data aggregations before discarding the raw data. This approach enables us to introduce new features at any time while incorporating past behavior data when launching them. This required more complexity in the system design but is a huge win for delighting customers as we develop quickly.
 -   **Clear writing on feature prioritization** in terms of delivering value to customers during the MVP stage
+    -   **Also note: I actually decided to focus on developing the architecture for a feature you did not put in the spec**
+    -   I did this because I think the most important valuable features are geofencing and fall detection, but their implementation is a little bit stragihtforward, and I wanted to show how I think beyond that
+    -   The feature I chose was **labeling motion patterns with ML to create metrics of how the patient's memory is doing**, and whether or not they are maintaining stable routines.
 -   A very basic demo UI that shows you a bit **more of my design sense**, how I think about UX, and shows more of my NextJS/React work
 -   Demonstrating my approach to a **development timeline**
 
-Here it is:
+OK! Here it is:
 
 ![](/public/homepage2.png)
 
@@ -44,15 +48,15 @@ Our product development selection, prioritization, and timing is based on the pr
 
 ## Key Features
 
--   Gait and balance tracking
--   Fall detection and realtime alert notification
 -   Geofencing for wandering protection
+-   Fall detection and realtime alert notification
 -   Label motion patterns with ML to create objective memory metrics:
--   How long are routine tasks taking? (bedroom, bathroom, typical eating wrist pattern)
--   Has the patient missed or delayed routine tasks lately?
+    -   How long are routine tasks taking? (bedroom, bathroom, typical eating wrist pattern)
+    -   Has the patient missed or delayed routine tasks lately?
+-   Gait and balance tracking
 -   Produce insights from heart rate, blood oxygen, and sleep pattern analysis
 -   Personalized Recommendations
--   Metrics Visualization
+-   Metrics visualization
 
 ### System design
 
