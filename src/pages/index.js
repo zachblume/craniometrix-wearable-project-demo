@@ -44,7 +44,7 @@ const Home = () => {
                     </ul>
                     <div className="mt-4 flex">
                         <Link
-                            hid="#"
+                            href="#"
                             className="text-sm font-medium text-orange-600 hover:text-orange-500 "
                         >
                             Or view all recommendations
@@ -170,7 +170,7 @@ const Recommendation = ({ recommendation, key: i }) => {
                     </div>
                     <div>
                         <h3 className="text-base font-medium text-gray-900">
-                            <Link hid="#" className="focus:outline-none">
+                            <Link href="#" className="focus:outline-none">
                                 <span className="absolute inset-0" aria-hidden="true" />
                                 <span>{recommendation.title}</span>
                                 <span aria-hidden="true"> &rarr;</span>
