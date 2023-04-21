@@ -9,6 +9,7 @@ import PageWrapper from "@/components/Layout/PageWrapper";
 import { toast } from "react-toastify";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Chart from "@/components/Chart";
+import Link from "next/link";
 
 const Home = () => {
     // const { data: recommendations, error, mutate } = useQuery(supabase.from("recommendations").select("*"));
@@ -42,13 +43,13 @@ const Home = () => {
                         ))}
                     </ul>
                     <div className="mt-4 flex">
-                        <a
+                        <Link
                             hid="#"
                             className="text-sm font-medium text-orange-600 hover:text-orange-500 "
                         >
                             Or view all recommendations
                             <span aria-hidden="true"> &rarr;</span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </Main>
@@ -169,11 +170,11 @@ const Recommendation = ({ recommendation, key: i }) => {
                     </div>
                     <div>
                         <h3 className="text-base font-medium text-gray-900">
-                            <a hid="#" className="focus:outline-none">
+                            <Link hid="#" className="focus:outline-none">
                                 <span className="absolute inset-0" aria-hidden="true" />
                                 <span>{recommendation.title}</span>
                                 <span aria-hidden="true"> &rarr;</span>
-                            </a>
+                            </Link>
                         </h3>
                         <p className="mt-1 text-base text-gray-500">{recommendation.description}</p>
                     </div>

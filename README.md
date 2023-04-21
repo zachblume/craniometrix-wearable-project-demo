@@ -1,6 +1,6 @@
 # Wearable Project - Sketch for Craniometrix
 
-![](/public/homepage.png)
+![](/public/homepage2.png)
 
 ## Introduction
 

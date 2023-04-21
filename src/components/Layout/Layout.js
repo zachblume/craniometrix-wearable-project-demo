@@ -20,16 +20,17 @@ import {
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 
 const GlobalLayout = ({ children }) => {
     // use router to mark the ojbect for the current path as current:true
     const router = useRouter();
     const navigation = [
         { name: "Recommendations", href: "/", icon: UsersIcon },
-        { name: "Realtime Alerts", href: "/alerts", icon: HomeIcon },
+        { name: "Realtime Alerts", href: "#", icon: HomeIcon },
         { name: "Wandering Protection", href: "/wandering", icon: FolderIcon },
-        { name: "Activity Patterns", href: "/activity", icon: CalendarIcon },
-        { name: "Provider Dashboard", href: "/providers", icon: ChartPieIcon },
+        { name: "Activity Patterns", href: "#", icon: CalendarIcon },
+        { name: "Provider Dashboard", href: "#", icon: ChartPieIcon },
     ].map((item) => ({ ...item, current: item.href === router.pathname }));
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -54,7 +55,7 @@ const GlobalLayout = ({ children }) => {
                                     <ul role="list" className="-mx-2 space-y-1">
                                         {navigation.map((item) => (
                                             <li key={item.name}>
-                                                <a
+                                                <Link
                                                     href={item.href}
                                                     className={classNames(
                                                         item.current
@@ -73,14 +74,14 @@ const GlobalLayout = ({ children }) => {
                                                         aria-hidden="true"
                                                     />
                                                     {item.name}
-                                                </a>
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
                                 </li>
 
                                 <li className="-mx-6 mt-auto">
-                                    <a
+                                    <Link
                                         onClick={() => supabase.auth.signOut()}
                                         href="#"
                                         className="flex items-center gap-x-4 px-6 py-3 font-semibold leading-6 text-white hover:bg-orange-700"
@@ -94,7 +95,7 @@ const GlobalLayout = ({ children }) => {
                                         />
                                         <span className="sr-only">Your profile</span>
                                         <span aria-hidden="true">Zach Blume</span>
-                                    </a>
+                                    </Link>
                                 </li>
                             </ul>
                         </nav>
@@ -112,7 +113,7 @@ const GlobalLayout = ({ children }) => {
                         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
                     <div className="flex-1 font-semibold leading-6 text-white">Dashboard</div>
-                    <a href="#">
+                    <Link href="#">
                         <span className="sr-only">Your profile</span>
                         <Image
                             className="h-8 w-8 rounded-full bg-orange-700"
@@ -121,7 +122,7 @@ const GlobalLayout = ({ children }) => {
                             height={100}
                             width={100}
                         />
-                    </a>
+                    </Link>
                 </div>
 
                 {/* Mobile sidebar */}
@@ -187,7 +188,7 @@ const GlobalLayout = ({ children }) => {
                                                     <ul role="list" className="-mx-2 space-y-1">
                                                         {navigation.map((item) => (
                                                             <li key={item.name}>
-                                                                <a
+                                                                <Link
                                                                     href={item.href}
                                                                     className={classNames(
                                                                         item.current
@@ -206,7 +207,7 @@ const GlobalLayout = ({ children }) => {
                                                                         aria-hidden="true"
                                                                     />
                                                                     {item.name}
-                                                                </a>
+                                                                </Link>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -221,9 +222,13 @@ const GlobalLayout = ({ children }) => {
                 </Transition.Root>
 
                 {/* Main */}
-                <main className="py-0 lg:pl-72">
-                    <div className="px-4 sm:px-6 lg:px-8">{children}</div>
-                </main>
+                {router.pathname == "/wandering" ? (
+                    children
+                ) : (
+                    <main className="py-0 lg:pl-72">
+                        <div className="px-4 sm:px-6 lg:px-8">{children}</div>
+                    </main>
+                )}
             </>
         </div>
     );

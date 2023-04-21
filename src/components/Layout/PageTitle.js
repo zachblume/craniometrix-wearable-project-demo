@@ -9,12 +9,12 @@ const PageTitle = ({ title, children, breadCrumbs, description }) => {
                     <ol role="list" className="flex items-center space-x-4">
                         <li>
                             <div className="flex">
-                                <a
-                                    href="#"
+                                <Link
+                                    href="/"
                                     className="text-sm font-medium text-gray-500 hover:text-gray-700"
                                 >
                                     Home
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         {breadCrumbs.map((breadcrumb, i) => (
