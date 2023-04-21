@@ -18,3 +18,7 @@ html {
 .desktop-sidebar {
     @apply hidden lg:fixed lg:top-2 lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col shadow-md;
 }
+
+.card {
+    @apply shadow-md mx-auto p-12 max-w-lg rounded-lg ring-1 ring-black ring-opacity-10;
+}
