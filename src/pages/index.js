@@ -6,7 +6,6 @@ import { ClockIcon, HeartIcon, MapIcon, PlayCircleIcon } from "@heroicons/react/
 import PageTitle from "@/components/Layout/PageTitle";
 import Main from "@/components/Layout/Main";
 import PageWrapper from "@/components/Layout/PageWrapper";
-import { toast } from "react-toastify";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Chart from "@/components/Chart";
 import Link from "next/link";

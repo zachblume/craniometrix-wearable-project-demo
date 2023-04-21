@@ -50,9 +50,9 @@ Our product development selection, prioritization, and timing is based on the pr
 
 -   Geofencing for wandering protection
 -   Fall detection and realtime alert notification
--   Label motion patterns with ML to create objective memory metrics:
-    -   How long are routine tasks taking? (bedroom, bathroom, typical eating wrist pattern)
-    -   Has the patient missed or delayed routine tasks lately?
+-   **Label motion patterns with ML to create objective memory metrics:**
+    -   **How long are routine tasks taking? (bedroom, bathroom, typical eating wrist pattern)**
+    -   **Has the patient missed routine tasks lately, or have they been delayed/slow?**
 -   Gait and balance tracking
 -   Produce insights from heart rate, blood oxygen, and sleep pattern analysis
 -   Personalized Recommendations
@@ -93,10 +93,10 @@ Let’s calculate the practicality of storing one datapoint per second:
 
 #### Server capacity:
 
--   Apple watches connect to a RabbitMQ instance behind a network load balancer for replication - with 10,000 connected devices posting 1kb once per second each, we’ll need BLANK servers
--   We have enabling queueing on the MQTT instance
+-   Apple watches connect to a RabbitMQ instance behind a network load balancer for replication - with 10,000 connected devices posting 1kb once per second each, we only theoretically need 1 server because each RabbitMQ server on a mid sized VM can handle about >40k messages/s. We'll configure at least two though, for instant failover protection behind the network load balancer. We'll configure the apple watch app itself to exponentially backoff retries if it can't connect to the RabbitMQ instance, preventing us from DDOSing our own server if the server blocks publisher connections based on the `vm_memory_high_watermark`.
+-   We have enabling queueing on the RabitMQ instance (uses native MQTT but implements AMQP internally within a node for queueing)
 -   There’s another network load balancer for incoming subscription connections to the broker
--   The (replicated) subscriber application takes messages and posts them using INSERT through pgbouncer to a timescaledb/postgres isntacne. For the same capacity, we’ll need BLANK number of replicated instances of this flow
+-   The (replicated) subscriber application takes messages and posts them using INSERT through pgbouncer to a timescaledb/postgres isntacne. For the same capacity, we’ll only need 1 number of instances, but we'll have 2 for instant failover.
 -   At 10k clients, we can batch 25 rows together in memory and only do 400 transactions/second. We’re still doing 10k INSERTs/second but a single TimescaleDB node can handle 50-100k INSERTs/second. Multi-node can scale to millions per second giving additional runway if we split out rows at some point as a transformation.
 
 ### System design for raw data ingestion:
@@ -107,72 +107,87 @@ Let’s calculate the practicality of storing one datapoint per second:
 
 Stream-based system design for realtime (<2s) notifications (did a fall occur, are we outside geofence):
 
--   Instead of building a overly complex realtime analytics stream with Apache Kafka, etc, - we’re going to embed the logic in the apple watch for FALL and GEOFENCE
--   We’re going to post to another endpoint (much more rarely)
--   That’s going to trigger a notification service (we can use AWS SES/SNS)
+-   Instead of building a overly complex realtime analytics stream with Apache Kafka, etc, - we’re going to embed the logic for FALL and GEOFENCE in the actual WatchOS app
+-   If these occur, we’re going to post to a seperate endpoint (much more rarely), can be a Lambda for simplicity
+-   That’s going to trigger a notification service (we can use SES/SNS for simplicity here)
 
 #### System design for predictive/analytical notifications
 
 Cron-based system design for predictive notifications (is balance off/a fall may be likely?) and analytical notifications (are today’s routine activity patterns diverging significantly from normal?)
 
--   Schedule a periodic job (e.g., using cron or Airflow) to analyze stored data and generate predictive and analytical notifications.
--   Notifications are sent through a suitable delivery mechanism such as email, SMS, or push notifications.
+-   Schedule a periodic job to analyze stored data and generate predictive and analytical notifications.
+-   The job will calculate a couple of metrics for each day:
+    -   Count and durations of eating (wrist pattern))
+    -   Count and durations of sleep
+    -   Count and durations of time in bedroom post-sleep (getting ready routine)
+    -   Count and durations of walking
+    -   Balance and gait metrics
+-   Then there will be a comparison of these count/duration pairs to the previous 7 days, and if there’s a significant difference or whether it is trending towards significance over several days. Once we have user data, we can also train a ML model to do feature selection and prediction, and then measure the trending difference between prediction and actual results for inference.
+-   We'll store the results of that in the application DB
 
-System design for user interface:
+#### System design for user interface:
 
--   Utilize Supabase as the backend to handle user authentication, storage, and API calls.
--   Build a responsive web or mobile application to display metrics, visualizations, and notifications to users.
+-   Utilize Supabase as a simple bakend/BaaS to handle user authentication and API calls.
+-   It uses a little server running PostgREST api/kong gateway as a thin layer over Postgres.
+-   It also has a realtime websocket layer for realtime updates for when we want to add that - during early production we can also just turn on 250ms polling for all the client calls for realtime-lite, and be confident that PostgREST will be able to handle it.
+-   We'll using Postgres foreign data wrapper to connect the seperate Postgres database which is running TimescaleDB and storing the raw data, along with indexes, etc. This will allow us to query the raw data directly from the frontend while also not mixing our raw data with our application data stores.
 
 ## Development timeline
 
 Week 1-2: Research and Planning
 
 -   Research Apple Watch capabilities and limitations, along with any relevant APIs and SDKs.
-    Develop a detailed project plan with clear milestones and deliverables.
--   Identify and set up necessary tools and platforms for the development process.
+-   Further develop a detailed project plan with clear milestones and deliverables.
+-   Identify and set up necessary tools and platforms for the development process, set up repositories, set up test instances of each part of the backend and frontend.
+-   Produce the WatchOS app and test it on a physical Apple Watch to start trasnmitting the raw data from sensors.
+-   Scaffold out the only built-in logic -- fall and geofence -- for initial testing with hardcoded values.
 
 Week 3-4: Backend Infrastructure Development
 
 -   Set up the RabbitMQ instances and network load balancers.
--   Configure Pgbouncer and TimescaleDB/PostgreSQL instances.
+-   Configure PG, Pgbouncer and TimescaleDB/PostgreSQL instances.
 -   Implement the data ingestion pipeline, including the subscriber application and data storage in TimescaleDB.
 -   Test and optimize data ingestion to ensure system reliability and performance.
 
 Week 5-6: Real-time and Cron-based Notification Systems
 
--   Implement the backend for receiving real-time notifications.
 -   Configure the delivery mechanism for real-time notifications (email, SMS, or push notifications).
--   Set up a cron-based job for generating predictive and analytical notifications.
+-   Scaffold out the cron-based job for generating predictive/analytical notifications.
 -   Test and optimize both real-time and cron-based notification systems.
 
 Week 7-8: Demo UI and Backend User Interface
 
 -   Design and develop a demo UI showcasing key features and functionality.
--   Set up Supabase as the backend for user authentication, storage, and API calls.
--   Develop the user interface using preferred frontend technologies.
+-   Set up Supabase as the backend for user authentication, and API calls.
 -   Integrate user interface components with backend APIs.
 
 Week 9-10: Testing, Debugging, and Optimization
 
 -   Perform thorough end-to-end testing of the system.
--   Identify and fix bugs or performance bottlenecks.
+-   Identify and fix bugs + performance bottlenecks.
 -   Optimize system performance and reliability.
 -   Finalize documentation and code quality.
 
-Week 11-12: Soft Launch and User Testing
+Week 11-12: Fleshing out the Routine-based Metrics
+
+-   Flesh out the routine-based metrics (eating, sleep, getting ready, walking, balance, gait)
+-   Test and optimize the cron-based notification system.
+
+Week 14-16: Soft Launch and User Testing
 
 -   Perform a soft launch of the MVP with a limited group of users.
 -   Collect user feedback and make necessary adjustments based on the feedback.
 -   Continue testing and optimizing the system.
 -   Plan and prepare for the full launch of the MVP.
+-   Instrument the code and set up monitoring tools to track system performance and user behavior.
 
-Week 13: Full Launch and Post-launch Support
+Week 17: Full Launch and Post-launch Support
 
 -   Launch the MVP to the target audience.
--   Provide ongoing support, maintenance, and updates.
+-   Provide fixes and support for any issues that may arise.
 -   Monitor system performance and user feedback to identify areas for improvement.
 
-Throughout the entire development timeline, maintain close communication with the project team and stakeholders to ensure alignment and address any issues that may arise. This timeline is subject to change based on the complexity of the implementation and any unforeseen challenges during the development process.
+Throughout the entire development timeline, maintain close communication with the project team and stakeholders to ensure alignment and address any issues that may arise.
 
 ## Demo UI for Caregiver application
 
@@ -183,9 +198,8 @@ https://craniometrix-wearable-project-demo.vercel.app
 ### Notes on UI demo:
 
 -   Shows an example UI flow for recommendations based on personalized analysis of activity patterns
+-   Shows the absolute basic/begining flow for drawing a geofence
 -   The UI is built with React and Next.js, hosted on Vercel
 -   Uses Supabase for authentication and backend
--   Uses the Supabase JS client to make API calls to the backend
--   Uses the Supabase Realtime client to subscribe to realtime notifications
+-   Ready to use the Supabase JS client to make API calls to the backend (didn't get to fleshing this out)
 -   Tailwind CSS for styling
--   E2E testing with Playwright

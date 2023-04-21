@@ -1,17 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    reactStrictMode: false,
-    images: {
-        // formats: ["image/avif", "image/webp"],
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "avatar-git-fork-bozaci-style-homepage-change.vercel.sh",
-                port: "",
-                pathname: "**",
-            },
-        ],
-    },
+    reactStrictMode: false, // Setting this to false bc google maps doesnt like pure rendering :)
 };
 
 module.exports = nextConfig;
