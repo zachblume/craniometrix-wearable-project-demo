@@ -28,10 +28,10 @@ const Home = () => {
                 </button>
             </PageTitle>
             <Main>
-                <div>
+                <div className="relative">
                     <ul
                         role="list"
-                        className="mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2"
+                        className=" mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2"
                     >
                         {recommendations.map((recommendation, i) => (
                             <Recommendation key={i} recommendation={recommendation} />
@@ -95,39 +95,104 @@ const recommendations = [
 
 const Recommendation = ({ recommendation, key: i }) => {
     const [scope, animate] = useAnimate();
+    const [open, setOpen] = useState(false);
 
-    // use framer motion to animate the card to fill the screen
-    const showRecommendation = () => {
-        animate("div", { opacity: 1 });
+    const showRecommendation = async () => {
+        setOpen(!open);
+        if (!open) {
+            await animate("li", { position: "absolute" }, { duration: 0 });
+            await animate(
+                "li",
+                {
+                    scale: 1,
+                    width: "100%",
+                    height: "100%",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 100,
+                    backgroundColor: "white",
+                    border: "1px solid #ddd",
+                    borderRadius: "12px",
+                    padding: "20px",
+                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.03)",
+                },
+                {
+                    duration: 0.5,
+                    // fix the glitchy transition rendering
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 12,
+                }
+            );
+        } else {
+            // animate back to normal state
+            await animate("li", { scale: 1 }, { duration: 0.5 });
+            await animate(
+                "li",
+                {
+                    position: "relative",
+                    width: "auto",
+                    height: "auto",
+                    top: "auto",
+                    left: "auto",
+                    right: "auto",
+                    bottom: "auto",
+                    zIndex: "auto",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    borderRadius: "none",
+                    padding: "0",
+                    boxShadow: "none",
+                },
+                { duration: 0 }
+            );
+        }
     };
 
     return (
-        <li key={i} ref={scope} className="flow-root" onClick={() => showRecommendation(i)}>
-            <div className=" hover:shadow-sm relative -m-2 flex items-center space-x-6 rounded-xl p-4 focus-within:ring-2 focus-within:ring-orange-500 hover:bg-gray-50">
+        <div key={i} ref={scope}>
+            <li
+                className="flow-root cursor-pointer"
+                // onMouseOver={() => (open ? null : animate("div", { scale: 1.03 }))}
+                // onMouseLeave={() => (open ? null : animate("div", { scale: 1 }))}
+                onClick={(e) => {
+                    e.preventDefault();
+                    showRecommendation();
+                }}
+            >
                 <div
                     className={
-                        "flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg " +
-                        recommendation.background
+                        (open ? "" : "hover:bg-gray-50 hover:shadow-sm ") +
+                        "relative -m-2 flex items-center space-x-6 rounded-xl p-4 focus-within:ring-2 focus-within:ring-orange-500"
                     }
                 >
-                    <recommendation.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                    <div
+                        className={
+                            "flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg " +
+                            recommendation.background
+                        }
+                    >
+                        <recommendation.icon className="h-6 w-6 text-white" aria-hidden="true" />
+                    </div>
+                    <div>
+                        <h3 className="text-base font-medium text-gray-900">
+                            <a hid="#" className="focus:outline-none">
+                                <span className="absolute inset-0" aria-hidden="true" />
+                                <span>{recommendation.title}</span>
+                                <span aria-hidden="true"> &rarr;</span>
+                            </a>
+                        </h3>
+                        <p className="mt-1 text-base text-gray-500">{recommendation.description}</p>
+                    </div>
                 </div>
-                <div>
-                    <h3 className="text-base font-medium text-gray-900">
-                        <a hid="#" className="focus:outline-none">
-                            <span className="absolute inset-0" aria-hidden="true" />
-                            <span>{recommendation.title}</span>
-                            <span aria-hidden="true"> &rarr;</span>
-                        </a>
-                    </h3>
-                    <p className="mt-1 text-base text-gray-500">{recommendation.description}</p>
-                </div>
-            </div>
-        </li>
+            </li>
+        </div>
     );
 };
 import { CheckIcon, HandThumbUpIcon, UserIcon } from "@heroicons/react/20/solid";
-import { useEffect, useId, useid } from "react";
+import { useEffect, useId, useState, useid } from "react";
 
 const timeline = [
     {
